@@ -6,7 +6,10 @@ Date: 2026-07-15
 
 - Top-level repo path: `/Users/maxim/Documents/Сайт Maevawave`.
 - Current branch: `main`.
-- At the start of this handoff, the top-level repo had no commits and no remote configured.
+- Current handoff commit before final site repo setup: `4aabae795331eef2d5ea22a4aa702068a06383ed`.
+- The top-level site repo has no GitHub remote configured yet.
+- GitHub repositories visible for `sokolovwish-gif` were checked on 2026-07-15. A separate MAEVAWAVE site repository was not found.
+- Recommended repository to create for this site: `sokolovwish-gif/maevawave-site`.
 - A separate nested Git repo exists at `work/maeva-wave-pay-bot` on branch `codex/production-sync`.
 
 ## Current Project Shape
@@ -165,7 +168,9 @@ Server edge Caddy note:
 
 ## Known Gaps / Unfinished Tasks
 
-- Top-level Git had no remote configured at handoff time, so push requires a repository URL first.
+- Top-level Git has no remote configured, so site push requires a separate site repository first.
+- Recommended repo name: `sokolovwish-gif/maevawave-site`.
+- Do not use `sokolovwish-gif/maeva-wave-pay-bot` as the site remote. That repository is only for the bot.
 - Top-level repo currently excludes nested `work/maeva-wave-pay-bot/` by `.gitignore` to avoid committing a broken embedded repo.
 - The bot nested repo has its own uncommitted changes and no remote configured locally.
 - Admin access for a staff member still needs an operational decision:
@@ -179,21 +184,55 @@ Server edge Caddy note:
 
 ## Next Steps on Windows
 
-1. Clone or copy the top-level repo.
-2. Configure the correct Git remote if missing.
-3. Pull the latest branch before editing.
-4. If bot work is needed, handle `work/maeva-wave-pay-bot` as a separate repo, not as a normal subfolder.
-5. Before any deployment, compare:
+After the site repository is created and pushed from this machine:
+
+```sh
+git clone https://github.com/sokolovwish-gif/maevawave-site.git
+cd maevawave-site
+git switch codex/windows-handoff
+```
+
+There is currently no npm install/build step for the public site because it is plain HTML/CSS/JS plus a Node admin backend.
+
+Preview the public site:
+
+```sh
+python3 -m http.server 8080
+```
+
+Run syntax checks with Node:
+
+```sh
+node --check script.js
+node --check trip.js
+node --check lead-form.js
+node --check admin/admin.js
+node --check admin/server.mjs
+```
+
+Run the admin backend with throwaway local data:
+
+```sh
+DATA_FILE=/tmp/maevawave-admin.json \
+SETTINGS_FILE=/tmp/maevawave-settings.json \
+LEADS_FILE=/tmp/maevawave-leads.jsonl \
+PORT=3012 \
+node admin/server.mjs
+```
+
+Operational notes:
+
+1. If bot work is needed, handle `work/maeva-wave-pay-bot` as a separate repo, not as a normal subfolder.
+2. Before any deployment, compare:
    - local `deploy/current-edge/Caddyfile`;
    - production `/opt/edge/Caddyfile`;
    - production admin data in `/opt/maevawave-admin/data`.
-6. For site-only copy changes, edit static files and deploy only those files.
-7. For admin API changes, rebuild only `maevawave-admin-admin-1`.
-8. For lead-delivery/bot changes, use the nested bot repo and rebuild only `sail_maeva-app-1`.
+3. For site-only copy changes, edit static files and deploy only those files.
+4. For admin API changes, rebuild only `maevawave-admin-admin-1`.
+5. For lead-delivery/bot changes, use the bot repo and rebuild only `sail_maeva-app-1`.
 
 ## Does the Bot Need a Separate Handoff?
 
 Yes, if work on payments, bookings, Robokassa, Google Sheets, Telegram bot flows, or lead delivery will continue on Windows.
 
 Reason: `work/maeva-wave-pay-bot` is an independent nested Git repository with its own branch and uncommitted changes. This site handoff documents the integration points, but it does not replace a dedicated bot handoff/commit/push.
-

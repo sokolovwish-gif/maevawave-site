@@ -1,6 +1,8 @@
 .DS_Store
 .pnpm-store/
 node_modules/
+dist/
+build/
 
 # Secrets and local credentials
 .env
@@ -18,7 +20,7 @@ backups/
 *.backup
 *.tar.gz
 *.log
+*.bundle
 
 # The bot is a separate nested repository. Commit/push it from its own folder.
 work/maeva-wave-pay-bot/
-
