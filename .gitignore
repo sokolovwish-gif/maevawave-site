@@ -1,0 +1,24 @@
+.DS_Store
+.pnpm-store/
+node_modules/
+
+# Secrets and local credentials
+.env
+.env.*
+!.env.example
+!.env.production.example
+*PRIVATE_KEY*
+*.pem
+secrets/
+google-service-account.json
+
+# Runtime data, backups and uploaded admin state
+data/
+backups/
+*.backup
+*.tar.gz
+*.log
+
+# The bot is a separate nested repository. Commit/push it from its own folder.
+work/maeva-wave-pay-bot/
+

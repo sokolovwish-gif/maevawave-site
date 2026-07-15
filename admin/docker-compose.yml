@@ -1,0 +1,35 @@
+services:
+  admin:
+    build:
+      context: .
+    image: maevawave-admin:deploy
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      GOOGLE_SHEET_ID: 15d9vQdv7AmafsoLuZsSPs0up9uXP_lR1SS7I-YQU5ig
+      GOOGLE_SHEET_GID: "0"
+      DATA_FILE: /data/site-overrides.json
+      SETTINGS_FILE: /data/site-settings.json
+      LEADS_FILE: /data/site-leads.jsonl
+      SITE_LEAD_RELAY_URL: http://sail-maeva-app:8000/internal/website-leads
+      SITE_LEAD_RELAY_SECRET: ${TELEGRAM_WEBHOOK_SECRET:-}
+    volumes:
+      - ./data:/data
+    networks:
+      proxy:
+        aliases:
+          - maevawave-admin
+      bot_backend:
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+
+networks:
+  proxy:
+    external: true
+    name: edge_proxy
+  bot_backend:
+    external: true
+    name: sail_maeva_backend

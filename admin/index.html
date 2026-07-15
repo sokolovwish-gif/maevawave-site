@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Админка maevawave</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/admin/admin.css?v=20260713-1" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <a class="admin-logo" href="/" aria-label="MAEVAWAVE, открыть сайт">
+          <img src="/images/logo-dark.png" alt="MAEVAWAVE" width="900" height="130" />
+        </a>
+        <p>Управление витриной путешествий</p>
+      </div>
+    </header>
+
+    <main>
+      <section class="site-mode">
+        <div>
+          <p class="eyebrow">Сайт</p>
+          <h2>Режим публикации</h2>
+          <span class="mode-status" id="mode-status">Загружаю…</span>
+        </div>
+        <div class="site-mode-actions">
+          <label class="switch">
+            <input id="placeholder-toggle" type="checkbox" />
+            <span class="switch-track"></span>
+            <strong>Заглушка</strong>
+          </label>
+          <button class="button mode-button" id="lead-form-settings-button" type="button">Редактировать анкету</button>
+          <button class="button mode-button" id="leads-button" type="button">Заявки</button>
+          <button class="button mode-button" id="refresh-button" type="button">Обновить</button>
+          <a class="button mode-button primary" href="/" target="_blank">Открыть сайт ↗</a>
+        </div>
+      </section>
+
+      <section class="intro">
+        <div>
+          <h1>Поездки на сайте</h1>
+        </div>
+        <div class="summary" id="summary">
+          <div><strong>—</strong><span>всего в таблице</span></div>
+          <div><strong>—</strong><span>видно на сайте</span></div>
+          <div><strong>—</strong><span>доступно к оплате</span></div>
+        </div>
+      </section>
+
+      <section class="toolbar">
+        <label class="search">
+          <span>Поиск</span>
+          <input id="search" type="search" placeholder="Страна, дата или ID" />
+        </label>
+        <label>
+          <span>Показывать</span>
+          <select id="filter">
+            <option value="all">Все поездки</option>
+            <option value="site">Видимые на сайте</option>
+            <option value="hidden">Скрытые на сайте</option>
+            <option value="payable">Доступные к оплате</option>
+            <option value="future">Будущие из таблицы</option>
+          </select>
+        </label>
+      </section>
+
+      <div class="notice" id="notice" hidden></div>
+      <section class="trip-list" id="trip-list" aria-live="polite"></section>
+    </main>
+
+    <template id="trip-template">
+      <article class="admin-card">
+        <div class="card-summary">
+          <button class="card-image quick-image" type="button" aria-label="Заменить фотографию">
+            <img alt="" />
+            <span class="edit-overlay">✎ <b>Фото</b></span>
+          </button>
+          <div class="card-title">
+            <div class="badges"></div>
+            <p class="trip-dates"></p>
+            <div class="title-row">
+              <h2></h2>
+              <button class="icon-edit quick-title" type="button" aria-label="Изменить заголовок">✎</button>
+            </div>
+            <p class="source-title"></p>
+            <dl>
+              <div><dt>ID</dt><dd data-field="id"></dd></div>
+              <div><dt>Цена в боте</dt><dd data-field="source-price"></dd></div>
+            </dl>
+          </div>
+          <div class="quick-controls">
+            <label class="quick-switch manual-control">
+              <span><strong>Ручной режим</strong><small>Иначе данные из таблицы</small></span>
+              <input name="manualMode" type="checkbox" />
+              <i></i>
+            </label>
+            <label class="quick-switch visibility-control">
+              <span><strong>Показ на сайте</strong><small class="visibility-state"></small></span>
+              <input name="siteVisible" type="checkbox" />
+              <i></i>
+            </label>
+            <button class="button settings-button" type="button">Настройки</button>
+            <a class="page-preview" href="#" target="_blank">Открыть страницу ↗</a>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <dialog id="settings-dialog" class="settings-dialog">
+      <form id="settings-form">
+        <header class="settings-header">
+          <div>
+            <p class="eyebrow">Редактор поездки</p>
+            <h2 id="settings-title">Настройки</h2>
+            <p class="settings-subtitle" id="settings-subtitle"></p>
+          </div>
+          <div class="settings-header-actions">
+            <a class="button secondary settings-preview" href="#" target="_blank">Открыть страницу ↗</a>
+            <button class="dialog-close settings-close" type="button" aria-label="Закрыть">×</button>
+          </div>
+        </header>
+
+        <div class="settings-content">
+          <section class="settings-section">
+            <div class="settings-section-heading">
+              <span>01</span>
+              <div>
+                <h3>Карточка в каталоге</h3>
+                <p>То, что посетитель видит в общем списке поездок.</p>
+              </div>
+            </div>
+            <div class="settings-grid">
+              <label class="wide">
+                <span>Заголовок</span>
+                <input name="cardTitle" maxlength="100" required />
+              </label>
+              <label>
+                <span>Бейдж</span>
+                <input name="badge" maxlength="40" />
+              </label>
+              <label>
+                <span>Цена на карточке</span>
+                <input name="priceLabel" maxlength="50" />
+              </label>
+              <label class="wide">
+                <span>Короткое описание</span>
+                <input name="description" maxlength="180" />
+              </label>
+              <label>
+                <span>Порядок</span>
+                <input name="order" type="number" min="-9999" max="9999" />
+              </label>
+              <label class="checkbox-field">
+                <input name="featured" type="checkbox" />
+                <span>Поднять поездку в начало</span>
+              </label>
+              <label class="wide">
+                <span>Фотография</span>
+                <select name="image">
+                  <option value="">Автоматически по стране</option>
+                  <option value="images/turkey-bay.jpg">Бирюзовая бухта</option>
+                  <option value="images/flamingo-sea.jpg">Фламинго на яхте</option>
+                  <option value="images/hammock-sea.webp">Гамак на борту</option>
+                  <option value="images/thailand-aerial.jpg">Острова с воздуха</option>
+                  <option value="images/hero-deck.webp">Палуба яхты</option>
+                  <option value="images/turkey-poster.webp">Побережье Турции</option>
+                </select>
+              </label>
+              <div class="wide settings-upload">
+                <input name="imageFile" type="file" accept="image/jpeg,image/png,image/webp" />
+                <button class="button upload settings-upload-button" type="button">Загрузить фотографию</button>
+              </div>
+              <fieldset class="wide gallery-field">
+                <legend>Галерея страницы поездки</legend>
+                <p>Если ничего не выбрано, сайт покажет стандартные фото по стране.</p>
+                <label><input name="gallery" type="checkbox" value="images/turkey-bay.jpg" /> Бирюзовая бухта</label>
+                <label><input name="gallery" type="checkbox" value="images/flamingo-sea.jpg" /> Фламинго на яхте</label>
+                <label><input name="gallery" type="checkbox" value="images/hammock-sea.webp" /> Гамак на борту</label>
+                <label><input name="gallery" type="checkbox" value="images/thailand-aerial.jpg" /> Острова с воздуха</label>
+                <label><input name="gallery" type="checkbox" value="images/hero-deck.webp" /> Палуба яхты</label>
+                <label><input name="gallery" type="checkbox" value="images/turkey-poster.webp" /> Побережье Турции</label>
+              </fieldset>
+            </div>
+          </section>
+
+          <section class="settings-section">
+            <div class="settings-section-heading">
+              <span>02</span>
+              <div>
+                <h3>Страница поездки</h3>
+                <p>Пустое поле автоматически использует общий текст для всех поездок.</p>
+              </div>
+            </div>
+            <div class="settings-grid">
+              <label class="wide">
+                <span>Вводный текст</span>
+                <textarea name="pageLead" rows="3" maxlength="600"></textarea>
+                <small data-inherit="pageLead"></small>
+              </label>
+              <label class="wide">
+                <span>Маршрут</span>
+                <textarea name="routeText" rows="5" maxlength="1500"></textarea>
+                <small data-inherit="routeText"></small>
+              </label>
+              <label class="wide">
+                <span>Проживание</span>
+                <textarea name="accommodationText" rows="5" maxlength="1500"></textarea>
+                <small data-inherit="accommodationText"></small>
+              </label>
+              <label>
+                <span>Что входит</span>
+                <textarea name="includedText" rows="8" maxlength="2000" placeholder="Один пункт на строку"></textarea>
+                <small data-inherit="includedText"></small>
+              </label>
+              <label>
+                <span>Что не входит</span>
+                <textarea name="excludedText" rows="8" maxlength="2000" placeholder="Один пункт на строку"></textarea>
+                <small data-inherit="excludedText"></small>
+              </label>
+              <label class="wide">
+                <span>Важная информация</span>
+                <textarea name="importantText" rows="5" maxlength="1500"></textarea>
+                <small data-inherit="importantText"></small>
+              </label>
+            </div>
+          </section>
+        </div>
+
+        <footer class="settings-footer">
+          <button class="button reset settings-reset" type="button">Сбросить все изменения</button>
+          <div>
+            <button class="button secondary settings-cancel" type="button">Закрыть</button>
+            <button class="button primary settings-save" type="submit">Сохранить</button>
+          </div>
+        </footer>
+      </form>
+    </dialog>
+
+    <dialog id="lead-form-dialog" class="settings-dialog">
+      <form id="lead-form-settings-form">
+        <header class="settings-header">
+          <div>
+            <p class="eyebrow">Общие настройки</p>
+            <h2>Анкета заявки</h2>
+            <p class="settings-subtitle">Одна анкета используется на всех карточках и страницах поездок.</p>
+          </div>
+          <div class="settings-header-actions">
+            <button class="dialog-close lead-form-close" type="button" aria-label="Закрыть">×</button>
+          </div>
+        </header>
+
+        <div class="settings-content">
+          <section class="settings-section">
+            <div class="settings-section-heading">
+              <span>01</span>
+              <div>
+                <h3>Подача и результат</h3>
+                <p>Главные тексты анкеты и сообщение после успешной отправки.</p>
+              </div>
+            </div>
+            <div class="settings-grid">
+              <label class="checkbox-field wide">
+                <input name="enabled" type="checkbox" />
+                <span>Анкета включена на сайте</span>
+              </label>
+              <label class="wide">
+                <span>Заголовок</span>
+                <input name="title" maxlength="90" required />
+              </label>
+              <label class="wide">
+                <span>Короткое пояснение</span>
+                <textarea name="intro" rows="3" maxlength="240"></textarea>
+              </label>
+              <label>
+                <span>Текст кнопки отправки</span>
+                <input name="submitLabel" maxlength="50" required />
+              </label>
+              <label>
+                <span>Ссылка на Telegram</span>
+                <input name="telegramUrl" type="url" maxlength="180" required />
+              </label>
+              <label>
+                <span>Заголовок после отправки</span>
+                <input name="successTitle" maxlength="90" required />
+              </label>
+              <label>
+                <span>Текст после отправки</span>
+                <textarea name="successText" rows="3" maxlength="240"></textarea>
+              </label>
+            </div>
+          </section>
+
+          <section class="settings-section">
+            <div class="settings-section-heading">
+              <span>02</span>
+              <div>
+                <h3>Вопросы</h3>
+                <p>Можно менять формулировки и скрывать необязательные вопросы. Имя и телефон всегда обязательны.</p>
+              </div>
+            </div>
+            <div class="lead-fields-editor" id="lead-fields-editor"></div>
+          </section>
+        </div>
+
+        <footer class="settings-footer">
+          <span class="settings-footer-note">Изменения сразу применятся ко всем поездкам.</span>
+          <div>
+            <button class="button secondary lead-form-cancel" type="button">Закрыть</button>
+            <button class="button primary lead-form-save" type="submit">Сохранить анкету</button>
+          </div>
+        </footer>
+      </form>
+    </dialog>
+
+    <dialog id="leads-dialog" class="settings-dialog">
+      <section class="leads-panel">
+        <header class="settings-header">
+          <div>
+            <p class="eyebrow">Продажи</p>
+            <h2>Заявки с сайта</h2>
+            <p class="settings-subtitle">Запись в базе, новый лист Google Sheets и уведомление в рабочем Telegram.</p>
+          </div>
+          <div class="settings-header-actions">
+            <button class="button secondary" id="leads-refresh" type="button">Обновить</button>
+            <button class="dialog-close leads-close" type="button" aria-label="Закрыть">×</button>
+          </div>
+        </header>
+        <div class="leads-content">
+          <div class="leads-list" id="leads-list" aria-live="polite"></div>
+        </div>
+      </section>
+    </dialog>
+
+    <dialog id="title-dialog" class="edit-dialog">
+      <form method="dialog">
+        <button class="dialog-close" value="cancel" aria-label="Закрыть">×</button>
+        <p class="eyebrow">Карточка поездки</p>
+        <h2>Изменить заголовок</h2>
+        <input name="title" maxlength="100" />
+        <div class="dialog-actions">
+          <button class="button secondary" value="cancel">Отмена</button>
+          <button class="button primary" value="save">Сохранить</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="image-dialog" class="edit-dialog">
+      <form method="dialog">
+        <button class="dialog-close" value="cancel" aria-label="Закрыть">×</button>
+        <p class="eyebrow">Карточка поездки</p>
+        <h2>Заменить фотографию</h2>
+        <select name="image">
+          <option value="">Автоматически по стране</option>
+          <option value="images/turkey-bay.jpg">Бирюзовая бухта</option>
+          <option value="images/flamingo-sea.jpg">Фламинго на яхте</option>
+          <option value="images/hammock-sea.webp">Гамак на борту</option>
+          <option value="images/thailand-aerial.jpg">Острова с воздуха</option>
+          <option value="images/hero-deck.webp">Палуба яхты</option>
+          <option value="images/turkey-poster.webp">Побережье Турции</option>
+        </select>
+        <div class="dialog-upload">
+          <input name="imageFile" type="file" accept="image/jpeg,image/png,image/webp" />
+          <button class="button upload" type="button">Загрузить свою</button>
+        </div>
+        <small>Фотография автоматически обрежется под пропорции карточки.</small>
+        <div class="dialog-actions">
+          <button class="button secondary" value="cancel">Отмена</button>
+          <button class="button primary" value="save">Применить</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="/admin/admin.js?v=20260713-1"></script>
+  </body>
+</html>

@@ -1,0 +1,92 @@
+pakto.ru {
+  encode zstd gzip
+  reverse_proxy pakto-app:3000
+
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "strict-origin-when-cross-origin"
+    -Server
+  }
+
+  log {
+    output stdout
+    format json
+  }
+}
+
+pay.maevawave.ru {
+  encode zstd gzip
+  reverse_proxy sail-maeva-app:8000
+
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "no-referrer"
+    -Server
+  }
+
+  log {
+    output stdout
+    format json
+  }
+}
+
+http://maevawave.ru, http://www.maevawave.ru {
+  redir https://maevawave.ru{uri} 301
+}
+
+www.maevawave.ru {
+  redir https://maevawave.ru{uri} 301
+}
+
+maevawave.ru {
+  encode zstd gzip
+
+  route {
+    @admin path /admin /admin/* /api/admin/*
+    basic_auth @admin {
+      admin {$ADMIN_PASSWORD_HASH}
+    }
+
+    handle /api/* {
+      reverse_proxy maevawave-admin:3000
+    }
+
+    handle {
+      root * /srv/maevawave
+      file_server
+    }
+  }
+
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "strict-origin-when-cross-origin"
+    Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    -Server
+  }
+
+  log {
+    output stdout
+    format json
+  }
+}
+
+nadlife.ru, www.nadlife.ru {
+  encode zstd gzip
+  reverse_proxy natalia-konvert-web:8080
+
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "strict-origin-when-cross-origin"
+    Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    -Server
+  }
+
+  log {
+    output stdout
+    format json
+  }
+}

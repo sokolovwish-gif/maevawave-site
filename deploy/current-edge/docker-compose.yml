@@ -1,0 +1,28 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      ADMIN_PASSWORD_HASH: "$$2a$$14$$FvZrwA3NZIg22ScnSL8FKuY1dNAHRYxEDK6tF9ZYvT9yt6m9F5OMa"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - /opt/maevawave-site:/srv/maevawave:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - proxy
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  proxy:
+    external: true
+    name: edge_proxy
+
+volumes:
+  caddy_data:
+  caddy_config:
