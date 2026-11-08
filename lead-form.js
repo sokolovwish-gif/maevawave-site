@@ -1,25 +1,25 @@
 (() => {
   const defaults = {
     enabled: true,
-    title: "Заявка на экспедицию",
-    intro: "Ответьте на несколько коротких вопросов. Это займёт около двух минут.",
+    title: "Анкета участника",
+    intro: "Расскажите немного о себе — это займёт около двух минут и поможет менеджеру подготовиться к разговору.",
     submitLabel: "Отправить анкету",
     successTitle: "Анкета отправлена",
-    successText: "Мы посмотрим ответы и свяжемся с вами.",
+    successText: "Менеджер MaevaWave напишет вам в Telegram или свяжется по указанному контакту и поможет с бронью места.",
     telegramUrl: "https://t.me/captainmaeva",
     fields: {},
   };
   const fieldDefaults = {
     people_count: ["Сколько вас будет?", ""],
     is_adult: ["Вам уже исполнилось 18 лет?", ""],
-    cabin_fit: ["Готовы жить в двухместной каюте?", ""],
+    cabin_fit: ["Подходит размещение по 2 человека в каюте?", ""],
     budget: ["Какой бюджет на путешествие вам комфортен?", ""],
     prepayment_ready: ["Готовы внести предоплату после согласования деталей?", ""],
     main_interest: ["Что для вас важнее всего в этой поездке?", ""],
     comment: ["Что ещё нам важно знать?", "Необязательно"],
     name: ["Как вас зовут?", "Можно только имя"],
     phone: ["Номер телефона", "Например, +7 999 123-45-67"],
-    telegram: ["Ник в Telegram", "username"],
+    telegram: ["Telegram для связи", "username — менеджер напишет сюда"],
     discover_source: ["Откуда вы о нас узнали?", ""],
   };
   const options = {
@@ -113,7 +113,7 @@
         <form class="lead-form" novalidate>
           <button class="lead-close" type="button" aria-label="Закрыть">×</button>
           <div class="lead-form-head">
-            <p class="lead-kicker">MAEVAWAVE · <span data-lead-trip></span></p>
+          <p class="lead-kicker">Анкета · <span data-lead-trip></span></p>
             <h2>${escapeHtml(settings.title)}</h2>
             <p>${escapeHtml(settings.intro)}</p>
             <div class="lead-progress"><i></i><span>Шаг 1 из 3</span></div>
@@ -279,6 +279,10 @@
     data.personal_data_consent = form.elements.personal_data_consent.checked;
     data.tour_id = currentTrip.id;
     data.submission_id = submissionId;
+    if (localStorage.getItem("promoIntent") === "true") {
+      data.promo_interest = true;
+      data.promo_label = "5%";
+    }
     submitButton.disabled = true;
     submitButton.textContent = "Отправляем…";
     error.hidden = true;
@@ -291,6 +295,7 @@
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.error || "Request failed");
       sessionStorage.removeItem(draftKey());
+      localStorage.removeItem("promoIntent");
       form.reset();
       form.classList.add("is-success");
       dialog.querySelector(".lead-result").hidden = false;
@@ -307,6 +312,7 @@
 
   async function open(trip) {
     currentTrip = trip;
+    document.dispatchEvent(new CustomEvent("maevawave:lead-open", { detail: { tripId: trip.id } }));
     const modal = await ensureDialog();
     const settings = await loadSettings();
     if (!settings.enabled) {

@@ -4,28 +4,35 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="index,follow,max-image-preview:large" />
-    <meta name="description" content="Яхтенное путешествие MAEVAWAVE: даты, маршрут, стоимость и анкета участника." />
+    <meta name="description" content="Яхтенное путешествие MaevaWave: даты, маршрут, стоимость, проживание на яхте и анкета участника." />
     <link rel="canonical" href="https://maevawave.ru/trip.html" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="MAEVAWAVE" />
-    <meta property="og:title" content="Яхтенное путешествие | MAEVAWAVE" />
-    <meta property="og:description" content="Даты, маршрут и стоимость яхтенного путешествия MAEVAWAVE." />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="MaevaWave" />
+    <meta property="og:title" content="Яхтенное путешествие | MaevaWave" />
+    <meta property="og:description" content="Даты, маршрут, стоимость, проживание на яхте и анкета участника." />
     <meta property="og:url" content="https://maevawave.ru/trip.html" />
     <meta property="og:image" content="https://maevawave.ru/images/hero-deck.webp" />
-    <meta name="theme-color" content="#092630" />
+    <meta property="og:image:alt" content="Яхтенное путешествие MaevaWave" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Яхтенное путешествие | MaevaWave" />
+    <meta name="twitter:description" content="Даты, маршрут, стоимость, проживание на яхте и анкета участника." />
+    <meta name="twitter:image" content="https://maevawave.ru/images/hero-deck.webp" />
+    <meta name="theme-color" content="#08090b" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <title>Яхтенное путешествие | MAEVAWAVE</title>
+    <title>Яхтенное путешествие | MaevaWave</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/styles.css?v=20260615-7" />
-    <link rel="stylesheet" href="/trip.css?v=20260713-2" />
-    <link rel="stylesheet" href="/lead-form.css?v=20260713-1" />
+    <link rel="stylesheet" href="/styles.css?v=20261109-1" />
+    <link rel="stylesheet" href="/trip.css?v=20261109-1" />
+    <link rel="stylesheet" href="/lead-form.css?v=20261109-1" />
+    <script id="trip-jsonld" type="application/ld+json">{"@context":"https://schema.org","@type":"TouristTrip","name":"Яхтенное путешествие MaevaWave"}</script>
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
       (function (m, e, t, r, i, k, a) {
@@ -44,13 +51,11 @@
   <body class="trip-page is-loading">
     <noscript><div><img src="https://mc.yandex.ru/watch/110991497" style="position: absolute; left: -9999px" alt="" /></div></noscript>
     <header class="header trip-page-header">
-      <a class="brand-logo header-logo" href="/" aria-label="MAEVAWAVE, на главную">
-        <img src="/images/logo-white.png" alt="MAEVAWAVE" width="900" height="130" />
+      <a class="brand-logo header-logo" href="/" aria-label="MaevaWave, на главную">
+        <img src="/images/logo-white.png" alt="MaevaWave" width="900" height="130" />
       </a>
-      <a class="trip-back" href="/#trips"><span aria-hidden="true">←</span> К выбору поездок</a>
-      <a class="header-cta" href="https://t.me/captainmaeva" target="_blank" rel="noreferrer">
-        Связаться <span aria-hidden="true">↗</span>
-      </a>
+      <a class="trip-back" href="/#trips"><span aria-hidden="true">←</span> К другим датам</a>
+      <a class="header-cta" href="https://t.me/captainmaeva" target="_blank" rel="noreferrer">Задать вопрос <span aria-hidden="true">↗</span></a>
     </header>
 
     <main id="trip-content" hidden>
@@ -64,18 +69,28 @@
           <div class="trip-hero-meta">
             <div><span>Даты</span><strong class="trip-page-dates"></strong></div>
             <div><span>Стоимость</span><strong class="trip-page-price"></strong></div>
+            <div><span>Места</span><strong class="trip-page-seats"></strong></div>
           </div>
+          <div class="trip-prepayment" hidden></div>
           <div class="trip-hero-actions">
-            <button class="button button-primary trip-lead-button" type="button">Заполнить анкету</button>
-            <p>Короткая анкета займёт около двух минут. После неё мы свяжемся и спокойно обсудим детали.</p>
+            <button class="button button-primary trip-lead-button" type="button">Оставить заявку</button>
+            <a class="button trip-question-button" href="https://t.me/captainmaeva" target="_blank" rel="noreferrer">Задать вопрос</a>
           </div>
+          <p class="trip-hero-note">Анкета займёт около двух минут. Сначала ответим на вопросы, затем объясним условия брони.</p>
         </div>
+      </section>
+
+      <section class="trip-facts" aria-label="Коротко о поездке">
+        <article data-trip-fact="duration" hidden><span>Длительность</span><strong></strong></article>
+        <article><span>Размещение</span><strong>По 2 человека в каюте</strong></article>
+        <article><span>Опыт</span><strong>Не нужен</strong></article>
+        <article><span>На борту</span><strong>Капитан Маша Маева</strong></article>
       </section>
 
       <section class="trip-detail-section">
         <div class="trip-detail-heading">
-          <p class="eyebrow dark">Путешествие</p>
-          <h2>Как всё<br /><span>будет</span></h2>
+          <p class="eyebrow">Маршрут и жизнь на борту</p>
+          <h2>Что будет<br /><span>на этой неделе.</span></h2>
         </div>
         <div class="trip-detail-grid">
           <article>
@@ -91,45 +106,69 @@
         </div>
       </section>
 
+      <section class="trip-gallery-section" aria-label="Галерея поездки">
+        <div class="trip-gallery-heading">
+          <p class="eyebrow">Без постановки</p>
+          <h2>Так выглядит<br /><span>жизнь на борту.</span></h2>
+        </div>
+        <div class="trip-gallery" data-trip-gallery></div>
+      </section>
+
+      <section class="trip-room-tour" hidden>
+        <div>
+          <p class="eyebrow">Яхта изнутри</p>
+          <h2>Посмотрите,<br /><span>где будем жить.</span></h2>
+          <p>Посмотрите, как устроены каюты и общие зоны до поездки.</p>
+        </div>
+        <div class="room-tour-media" data-room-tour></div>
+      </section>
+
       <section class="trip-inclusions">
         <div class="inclusion-card included">
-          <p class="eyebrow dark">В стоимости</p>
+          <p class="eyebrow">В стоимости</p>
           <h2>Что входит</h2>
           <ul data-page-list="includedText"></ul>
         </div>
         <div class="inclusion-card excluded">
-          <p class="eyebrow dark">Дополнительно</p>
+          <p class="eyebrow">Дополнительно</p>
           <h2>Что не входит</h2>
           <ul data-page-list="excludedText"></ul>
         </div>
       </section>
 
-      <section class="trip-gallery-section" aria-label="Галерея поездки">
-        <div class="trip-gallery-heading">
-          <p class="eyebrow dark">Атмосфера</p>
-          <h2>Фото<br /><span>поездки</span></h2>
+      <section class="trip-faq">
+        <div class="trip-faq-heading">
+          <p class="eyebrow">Перед поездкой</p>
+          <h2>Вопросы до первой <span>яхты.</span></h2>
         </div>
-        <div class="trip-gallery" data-trip-gallery></div>
+        <div class="faq-list">
+          <details open><summary>Нужен ли опыт яхтинга?<span>+</span></summary><p>Нет. Маша всё объяснит и поможет спокойно включиться в жизнь на яхте. Участие в управлении добровольное.</p></details>
+          <details><summary>Можно приехать одной или одному?<span>+</span></summary><p>Да. Большая часть участников приезжает по одиночке и знакомится с командой уже на борту.</p></details>
+          <details><summary>Как проходит бронирование?<span>+</span></summary><p>Заполните короткую анкету. Менеджер MaevaWave напишет вам в Telegram, ответит на вопросы и расскажет, как зафиксировать место.</p></details>
+          <details><summary>Можно просто отдыхать?<span>+</span></summary><p>Да. Можно купаться, загорать и наслаждаться маршрутом. Если захочется попробовать штурвал или паруса — Маша всё покажет.</p></details>
+          <details><summary>Что взять с собой?<span>+</span></summary><p>До поездки мы пришлём подробный список. Лучше взять мягкую сумку, удобную одежду, нескользящую обувь, ветровку и личную аптечку.</p></details>
+          <details><summary>Как устроена логистика?<span>+</span></summary><p>Для конкретной поездки заранее пришлём аэропорт, время прибытия, варианты трансфера и точку встречи в марине.</p></details>
+        </div>
       </section>
 
       <section class="trip-apply">
         <div>
-          <p class="eyebrow">Следующий шаг</p>
-          <h2>Оставьте заявку</h2>
+          <p class="eyebrow light">Следующий шаг</p>
+          <h2>Обсудить эту поездку</h2>
           <p data-page-field="importantText"></p>
         </div>
-        <button class="button button-primary trip-lead-button" type="button">Заполнить анкету</button>
+        <button class="button button-primary trip-lead-button" type="button">Оставить заявку</button>
       </section>
     </main>
 
     <section class="trip-not-found" id="trip-not-found" hidden>
-      <img src="/images/logo-dark.png" alt="MAEVAWAVE" />
+      <img src="/images/logo-dark.png" alt="MaevaWave" />
       <h1>Поездка не найдена</h1>
       <p>Возможно, она пока скрыта или даты уже изменились.</p>
-      <a class="button button-primary" href="/#trips">Посмотреть поездки</a>
+      <a class="button button-primary" href="/#trips">Посмотреть путешествия</a>
     </section>
 
-    <script src="/lead-form.js?v=20260713-1"></script>
-    <script src="/trip.js?v=20260713-1"></script>
+    <script src="/lead-form.js?v=20261109-1"></script>
+    <script src="/trip.js?v=20261109-1"></script>
   </body>
 </html>
